@@ -9,15 +9,14 @@ import {observer} from 'mobx-react';
 /* tslint:disable */
 @observer
 class TaskEditor extends React.Component<{appState: AppState}, {}> {
-  state = this.props.appState;
 
-  onChange(newValue: string) {
-    console.log(this);
-
-      this.state.task = newValue;
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("hello",nextProps, nextState)
+    return true;
   }
 
   render() {
+    console.log("render")
       return (
         <AceEditor
             mode="java"
