@@ -1,15 +1,24 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import App from './App';
-
-//import TaskEditor from './TaskEditor';
-// import AppState from './AppState';
-//import Connect from './Connect';
+import {
+    BrowserRouter as Router,
+    Route
+} from 'react-router-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
-// const appState =  new AppState();
-// <TaskEditor appState={appState} />
+import TaskEditor from './TaskEditor';
+import AppState from './AppState';
+import Connect from './Connect';
+const appState =  new AppState();
+const ConnectPage = () => <Connect appState={appState} />;
+const MainPage = () => <TaskEditor appState={appState} />;
 
-
-ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
+ReactDOM.render((
+  <Router>
+    <div>
+        <Route exact={true} path="/" component={ConnectPage} />
+        <Route path="/graph" component={MainPage} />
+    </div>
+</Router>
+), document.getElementById('root') as HTMLElement);
