@@ -8,19 +8,23 @@ import { History } from 'history';
 
 class Connect extends React.Component<{ appState: AppState }, {}> {
 
-    graphConnect(appState: AppState, history: History) {
+    graphConnect(appState: AppState, history: History, target:string) {
+        AppState.setConnectionLink(appState.url);
         const graph: Graph = GraphBuilder.newBuilder().withStorage(new WSClient('ws://' + appState.url + '/ws')).build();
         graph.connect((result) => {
             if (result === true) {
                 appState.graph = graph;
-                history.push('/graph');
+                history.push(target);
             }
         });
     }
 
     render() {
-        const RichButton = withRouter(({ history }) => (
-            <Button color="info" onClick={() => { this.graphConnect(this.props.appState, history); }}>Connect</Button>
+        const ConnectToTask = withRouter(({ history }) => (
+            <Button color="info" onClick={() => { this.graphConnect(this.props.appState, history, '/graph'); }}>Task</Button>
+        ));
+        const ConnectToBrowse = withRouter(({ history }) => (
+          <Button color="info" onClick={() => { this.graphConnect(this.props.appState, history, '/browser'); }}>Browse</Button>
         ));
         return (
             <div className="jumbotron jumbotron-fluid">
@@ -30,7 +34,8 @@ class Connect extends React.Component<{ appState: AppState }, {}> {
                             <InputGroupAddon>GreyCat Gateway</InputGroupAddon>
                             <Input name="url" placeholder="IP:PORT" defaultValue={this.props.appState.url} onChange={(event) => { this.props.appState.url = event.target.value; }} />
                             <InputGroupButton>
-                                <RichButton />
+                                <ConnectToTask />
+                                <ConnectToBrowse />
                             </InputGroupButton>
                         </InputGroup>
                     </div>
