@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
 
-import {Node as GCNode, internal} from 'greycat';
+import {Node as GCNode, internal, struct} from 'greycat';
 import {plugin, Type} from 'greycat';
 
 import * as SplitPane from 'react-split-pane';
@@ -53,7 +53,45 @@ export class Node extends Component<NodeProps, NodeState> {
         if (elemType === Type.RELATION || elemType === Type.RELATION_INDEXED) {
           rels.push({key: retrieved, value: elem});
         } else {
-          atts.push({key: retrieved, value: elem});
+          switch (elemType) {
+            case Type.BOOL:
+            case Type.STRING:
+            case Type.LONG:
+            case Type.INT:
+            case Type.DOUBLE:
+            case Type.DOUBLE_ARRAY:
+            case Type.LONG_ARRAY:
+            case Type.INT_ARRAY:
+            case Type.STRING_ARRAY:
+              atts.push({key: retrieved, value: elem});
+              break;
+            case Type.DMATRIX:
+              atts.push({key: retrieved, value: "DMATRIX(" + (elem as struct.DMatrix).data().length + ")" });
+              break;
+            case Type.LMATRIX:
+              atts.push({key: retrieved, value: "LMATRIX(" + (elem as struct.LMatrix).data().length + ")" });
+              break;
+            case Type.EGRAPH:
+              atts.push({key: retrieved, value: "EGraph(" + (elem as struct.EGraph).size()+ ")" });
+              break;
+            default: console.log(elemType,typeof elem);
+            /*
+             static LONG_TO_LONG_MAP: number;
+             static LONG_TO_LONG_ARRAY_MAP: number;
+             static STRING_TO_INT_MAP: number;
+             static ENODE: number;
+             static ERELATION: number;
+             static TASK: number;
+             static TASK_ARRAY: number;
+             static KDTREE: number;
+             static NDTREE: number;
+             static NODE: number;
+             static NODE_ARRAY: number;
+             static INT_TO_INT_MAP: number;
+             static INT_TO_STRING_MAP: number;
+             */
+          }
+
         }
       });
 
