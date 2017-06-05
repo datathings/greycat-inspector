@@ -8,7 +8,7 @@ import { History } from 'history';
 
 class Connect extends React.Component<{ appState: AppState }, {}> {
 
-    graphConnect(appState: AppState, history: History, target:string) {
+    graphConnect(appState: AppState, history: History, target: string) {
         AppState.setConnectionLink(appState.url);
         const graph: Graph = GraphBuilder.newBuilder().withStorage(new WSClient('ws://' + appState.url + '/ws')).build();
         graph.connect((result) => {
