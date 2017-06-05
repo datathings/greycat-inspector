@@ -16,7 +16,6 @@
     //"strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "compileOnSave": true,
     "experimentalDecorators": true
   },
   "exclude": [

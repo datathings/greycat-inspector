@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Component} from 'react';
 
-import {Node as GCNode} from 'greycat';
+import {Node as GCNode, internal} from 'greycat';
 import {plugin, Type} from 'greycat';
 
 import * as SplitPane from 'react-split-pane';
@@ -48,7 +48,7 @@ export class Node extends Component<NodeProps, NodeState> {
       nState.each((attributeKey: number, elemType: number, elem: any) => {
         let retrieved: string = graph.resolver().hashToString(attributeKey);
         if (!retrieved) {
-          retrieved = ""+attributeKey;
+          retrieved = "" + attributeKey;
         }
         if (elemType === Type.RELATION || elemType === Type.RELATION_INDEXED) {
           rels.push({key: retrieved, value: elem});
@@ -64,10 +64,10 @@ export class Node extends Component<NodeProps, NodeState> {
     });
   }
 
-  expandRelation(e:SyntheticEvent<any>) {
-    let relName : string = (e.target as HTMLElement).textContent;
-    this.setState({right:null}, ()=>{
-      this.setState({right:(<Relation parent={this.props.me} relName={relName}/>)});
+  expandRelation(e: SyntheticEvent<any>) {
+    let relName: string = (e.target as HTMLElement).textContent;
+    this.setState({right: null}, () => {
+      this.setState({right: (<Relation parent={this.props.me} relName={relName}/>)});
     });
 
   }
@@ -77,25 +77,42 @@ export class Node extends Component<NodeProps, NodeState> {
     let attributes: any = null;
     let relations: any = null;
 
-    if(this.state.attributes.length > 0){
+    if (this.state.attributes.length > 0) {
 
-      let attributeList = this.state.attributes.map((att, idx:number)=>{
-        return <tr key={idx}><td>{att.key}</td><td>{att.value}</td></tr>
+      let attributeList = this.state.attributes.map((att, idx: number) => {
+        if (att.value instanceof internal.heap.HeapLongArray || att.value instanceof internal.heap.HeapDoubleArray || att.value instanceof internal.heap.HeapIntArray) {
+          return <tr key={idx}>
+            <td><b>{att.key}</b></td>
+            <td>{att.value.extract().toString()}</td>
+          </tr>
+        } else {
+          return <tr key={idx}>
+            <td><b>{att.key}</b></td>
+            <td>{att.value}</td>
+          </tr>
+        }
       });
 
-      attributes = (<div className="card-text">
-        <table><tr><th>Attribute</th><th>Value</th></tr>
-        <tbody>
-        {attributeList}
-        </tbody>
+      attributes = (<div className="card-text" style={{overflow:"hidden"}}>
+        <table>
+          <thead>
+          <tr>
+            <th>Attribute</th>
+            <th>Value</th>
+          </tr>
+          </thead>
+          <tbody>
+          {attributeList}
+          </tbody>
         </table>
       </div>);
     }
 
-    if(this.state.relations.length > 0){
+    if (this.state.relations.length > 0) {
 
       let relationsList = this.state.relations.map(((rel, idx: number) => {
-        return (<li key={idx} className="list-group-item" onClick={this.expandRelation.bind(this)} >{rel.key}</li>);
+        return (
+          <li key={idx} className="list-group-item" style={{overflow:"hidden"}} onClick={this.expandRelation.bind(this)}>{rel.key}</li>);
       }).bind(this));
       relations = (
         <ul className="list-group list-group-flush">
@@ -104,20 +121,20 @@ export class Node extends Component<NodeProps, NodeState> {
     }
 
     return (
-    <SplitPane split="vertical" defaultSize={150} className="primary">
-      <div>
-        <div className="card">
-          <div className="card-header">
-            {this.name}
+      <SplitPane split="vertical" defaultSize={150} className="primary">
+        <div>
+          <div className="card">
+            <div className="card-header">
+              {(this.name ? this.name : 'No_Name')}
+            </div>
+            {attributes}
+            {relations}
           </div>
-          {attributes}
-          {relations}
         </div>
-      </div>
-      <div>
-        {this.state.right}
-      </div>
-    </SplitPane>);
+        <div>
+          {this.state.right}
+        </div>
+      </SplitPane>);
   }
 }
 

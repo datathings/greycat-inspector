@@ -60,7 +60,7 @@ class Relation extends Component<RelationProps, RelationState> {
     if (this.state.content.length > 0) {
 
       let childElements = this.state.content.map((childNode: GCNode, idx: number) => {
-        return (<li key={idx} className="list-group-item" onClick={this.expandNode.bind(this)} data-node={idx}>{childNode.get('name')}</li>);
+        return (<li key={idx} className="list-group-item" style={{overflow:"hidden"}} onClick={this.expandNode.bind(this)} data-node={idx}>{childNode.get('name')}</li>);
       });
       children = (
         <ul className="list-group list-group-flush">
