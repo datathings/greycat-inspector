@@ -31,14 +31,14 @@ class Relation extends Component<RelationProps, RelationState> {
     }
   }
 
-  private static traverseMe : Task = Tasks.newTask()
+  private static traverseMe: Task = Tasks.newTask()
     .travelInTime("{{time}}")
     .traverse("{{myName}}");
 
   componentDidMount() {
     AppState.graph((graph => {
-      let taskContext : TaskContext = Relation.traverseMe.prepare(graph, this.props.parent, ((result:TaskResult<Node>)=>{
-        this.setState({content  : result.asArray()});
+      let taskContext: TaskContext = Relation.traverseMe.prepare(graph, this.props.parent, ((result: TaskResult<Node>) => {
+        this.setState({content: result.asArray()});
       }).bind(this));
       taskContext.setTime((new Date()).getTime());
       taskContext.setVariable("myName", this.props.relName);
@@ -46,21 +46,24 @@ class Relation extends Component<RelationProps, RelationState> {
     }).bind(this));
   }
 
-  expandNode(e:SyntheticEvent<any>) {
-    let node : GCNode = this.state.content[(e.target as HTMLElement).dataset['node']];
-    this.setState({right:null}, ()=>{
-      this.setState({right:(<Node me={node}/>)});
+  expandNode(e: SyntheticEvent<any>) {
+    let node: GCNode = this.state.content[(e.target as HTMLElement).dataset['node']];
+    this.setState({right: null}, () => {
+      this.setState({right: (<Node me={node}/>)});
     });
 
   }
 
   render() {
 
-    let children: any = "";
-    if (this.state.content.length > 0) {
+    let children: any = (<div>
 
+      <span>Loading... <i className="fa fa-spinner fa-pulse"></i></span>
+    </div>);
+    if (this.state.content.length > 0) {
       let childElements = this.state.content.map((childNode: GCNode, idx: number) => {
-        return (<li key={idx} className="list-group-item" style={{overflow:"hidden"}} onClick={this.expandNode.bind(this)} data-node={idx}>{childNode.get('name')}</li>);
+        return (
+          <li key={idx} className="list-group-item" style={{overflow:"hidden"}} onClick={this.expandNode.bind(this)} data-node={idx}>{childNode.get('name')}</li>);
       });
       children = (
         <ul className="list-group list-group-flush">
@@ -70,20 +73,20 @@ class Relation extends Component<RelationProps, RelationState> {
 
 
     return (
-    <SplitPane split="vertical" defaultSize={150} className="primary">
-      <div>
-        <div className="card">
-          <div className="card-header">
-            {(this.props.displayName?this.props.displayName:this.props.relName)}
+      <SplitPane split="vertical" defaultSize={150} className="primary">
+        <div>
+          <div className="card">
+            <div className="card-header">
+              {(this.props.displayName ? this.props.displayName : this.props.relName)}
+            </div>
+            {children}
           </div>
-          {children}
         </div>
-      </div>
-      <div>
-        {this.state.right}
-      </div>
-    </SplitPane>
-      );
+        <div>
+          {this.state.right}
+        </div>
+      </SplitPane>
+    );
   }
 }
 

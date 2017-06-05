@@ -55,15 +55,23 @@ export class Node extends Component<NodeProps, NodeState> {
         } else {
           switch (elemType) {
             case Type.BOOL:
+              atts.push({key: retrieved, value: (elem?"true":"false")});
+              break;
             case Type.STRING:
             case Type.LONG:
             case Type.INT:
             case Type.DOUBLE:
-            case Type.DOUBLE_ARRAY:
-            case Type.LONG_ARRAY:
-            case Type.INT_ARRAY:
             case Type.STRING_ARRAY:
               atts.push({key: retrieved, value: elem});
+              break;
+            case Type.DOUBLE_ARRAY:
+              atts.push({key: retrieved, value: "DoubleArray(" + (elem as any).size() + ")" });
+              break;
+            case Type.LONG_ARRAY:
+              atts.push({key: retrieved, value: "LongArray(" + (elem as any).size() + ")" });
+              break;
+            case Type.INT_ARRAY:
+              atts.push({key: retrieved, value: "IntArray(" + (elem as any).size() + ")" });
               break;
             case Type.DMATRIX:
               atts.push({key: retrieved, value: "DMATRIX(" + (elem as struct.DMatrix).data().length + ")" });
@@ -75,21 +83,6 @@ export class Node extends Component<NodeProps, NodeState> {
               atts.push({key: retrieved, value: "EGraph(" + (elem as struct.EGraph).size()+ ")" });
               break;
             default: console.log(elemType,typeof elem);
-            /*
-             static LONG_TO_LONG_MAP: number;
-             static LONG_TO_LONG_ARRAY_MAP: number;
-             static STRING_TO_INT_MAP: number;
-             static ENODE: number;
-             static ERELATION: number;
-             static TASK: number;
-             static TASK_ARRAY: number;
-             static KDTREE: number;
-             static NDTREE: number;
-             static NODE: number;
-             static NODE_ARRAY: number;
-             static INT_TO_INT_MAP: number;
-             static INT_TO_STRING_MAP: number;
-             */
           }
 
         }
