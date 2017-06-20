@@ -9,8 +9,8 @@ import { History } from 'history';
 class Connect extends React.Component<{ appState: AppState }, {}> {
 
     graphConnect(appState: AppState, history: History, target: string) {
-        AppState.setConnectionLink(appState.url);
-        const graph: Graph = GraphBuilder.newBuilder().withStorage(new WSClient('ws://' + appState.url + '/ws')).build();
+        AppState.setConnectionLink(AppState.url);
+        const graph: Graph = GraphBuilder.newBuilder().withStorage(new WSClient(AppState.url)).build();
         graph.connect((result) => {
             if (result === true) {
                 appState.graph = graph;
@@ -32,7 +32,7 @@ class Connect extends React.Component<{ appState: AppState }, {}> {
                     <div className="row">
                         <InputGroup>
                             <InputGroupAddon>GreyCat Gateway</InputGroupAddon>
-                            <Input name="url" placeholder="IP:PORT" defaultValue={this.props.appState.url} onChange={(event) => { this.props.appState.url = event.target.value; }} />
+                            <Input name="url" placeholder="IP:PORT" defaultValue={AppState.url} onChange={(event) => { AppState.url = event.target.value; }} />
                             <InputGroupButton>
                                 <ConnectToTask />
                                 <ConnectToBrowse />

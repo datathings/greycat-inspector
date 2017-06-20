@@ -38,6 +38,13 @@ class Relation extends Component<RelationProps, RelationState> {
   componentDidMount() {
     AppState.graph((graph => {
       let taskContext: TaskContext = Relation.traverseMe.prepare(graph, this.props.parent, ((result: TaskResult<Node>) => {
+        if(result.exception()) {
+          console.error(result.exception());
+        }
+        if(result.output()) {
+          console.log(result.output());
+        }
+        console.log("Children", result);
         this.setState({content: result.asArray()});
       }).bind(this));
       taskContext.setTime((new Date()).getTime());
