@@ -4,7 +4,7 @@ import { WSClient } from 'greycat-websocket';
 
 /* tslint:disable */
 class AppState {
-    public static url: string = 'ws://localhost:3000/ws';
+    url: string = 'ws://localhost:3000/ws';
     graph : Graph;
     @observable task: string = "travelInTime(0)";
 
@@ -21,7 +21,7 @@ class AppState {
         } else {
             let connectionLink = window.sessionStorage.getItem("greycat:inspector:connection");
             if(connectionLink === undefined) {
-               connectionLink = AppState.url;
+               connectionLink = "ws://localhost:3000/ws";
             }
             let graph: Graph = GraphBuilder.newBuilder().withStorage(new WSClient(connectionLink)).build();
             graph.connect((result) => {
