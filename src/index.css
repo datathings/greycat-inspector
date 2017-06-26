@@ -53,3 +53,11 @@ Resizer.disabled {
 Resizer.disabled:hover {
   border-color: transparent;
 }
+
+
+.force-position {
+    position: inherit !important;
+    height: 600px !important;
+    margin-bottom: 0px !important;
+    overflow: scroll !important;
+}

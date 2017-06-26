@@ -152,7 +152,7 @@ export class Node extends Component<NodeProps, NodeState> {
     }
 
     return (
-      <SplitPane split="vertical" defaultSize={150} className="primary">
+      <SplitPane split="vertical" defaultSize={150} className="primary force-position">
         <div>
           <div className="card">
             <div className="card-header">

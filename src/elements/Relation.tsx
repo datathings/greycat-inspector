@@ -80,9 +80,9 @@ class Relation extends Component<RelationProps, RelationState> {
 
 
     return (
-      <SplitPane split="vertical" defaultSize={150} className="primary">
+      <SplitPane split="vertical" defaultSize={150} className="primary force-position"  >
         <div>
-          <div className="card">
+          <div className="card" >
             <div className="card-header">
               {(this.props.displayName ? this.props.displayName : this.props.relName)}
             </div>
