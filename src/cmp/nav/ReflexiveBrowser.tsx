@@ -1,15 +1,12 @@
 import * as React from 'react';
 import {Component} from 'react';
-import AppState from './AppState';
 
 import * as SplitPane from 'react-split-pane';
 import {SyntheticEvent} from 'react';
-import {NodeIndex} from 'greycat';
-import Relation from "./elements/Relation";
 
 
 export interface ReflexiveBrowserProps {
-  appState: AppState;
+  //appState: AppState;
 }
 
 export interface ReflexiveBrowserState {
@@ -29,18 +26,20 @@ class ReflexiveBrowser extends Component<ReflexiveBrowserProps, ReflexiveBrowser
 
 
   componentDidMount() {
+    /*
     AppState.graph(graph => {
       graph.indexNames(0, (new Date()).getTime(), ((globalIndexesNames: string[]) => {
         this.setState({indexes: globalIndexesNames});
       }).bind(this));
     });
+    */
 
   }
 
   expand(e: SyntheticEvent<any>) {
     let indexName :string = (e.target as HTMLElement).textContent;
     console.log(indexName, e);
-
+    /*
     AppState.graph(graph => {
       graph.index(0, (new Date()).getTime(), indexName, ((indexNode: NodeIndex) => {
         this.setState({right:null}, ()=>{
@@ -48,6 +47,7 @@ class ReflexiveBrowser extends Component<ReflexiveBrowserProps, ReflexiveBrowser
         });
       }).bind(this));
     });
+    */
   }
 
   render() {

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {Component} from 'react';
 
-import {Node as GCNode, internal, struct} from 'greycat';
+import {Node as GCNode, internal} from 'greycat';
+/*
 import {plugin, Type} from 'greycat';
-
+*/
 import * as SplitPane from 'react-split-pane';
 
 import 'bootstrap/dist/css/bootstrap.css';
-import AppState from "../AppState";
 import Relation from "./Relation";
 import SyntheticEvent = React.SyntheticEvent;
 
@@ -39,6 +39,7 @@ export class Node extends Component<NodeProps, NodeState> {
 
   componentDidMount() {
     console.log("expand");
+    /*
     AppState.graph(graph => {
       let nState: plugin.NodeState = graph.resolver().resolveState(this.props.me);
 
@@ -50,7 +51,7 @@ export class Node extends Component<NodeProps, NodeState> {
         if (!retrieved) {
           retrieved = "" + attributeKey;
         }
-        if (elemType === Type.RELATION || elemType === Type.RELATION_INDEXED) {
+        if (elemType === Type.RELATION) {
           rels.push({key: retrieved, value: elem});
         } else {
           switch (elemType) {
@@ -79,8 +80,8 @@ export class Node extends Component<NodeProps, NodeState> {
             case Type.LMATRIX:
               atts.push({key: retrieved, value: "LMATRIX(" + (elem as struct.LMatrix).data().length + ")" });
               break;
-            case Type.EGRAPH:
-              atts.push({key: retrieved, value: "EGraph(" + (elem as struct.EGraph).size()+ ")" });
+            case Type.ESTRUCT_ARRAY:
+              atts.push({key: retrieved, value: "EGraph(" + (elem as struct.EStructArray).size()+ ")" });
               break;
             default: console.log(elemType,typeof elem);
           }
@@ -93,6 +94,7 @@ export class Node extends Component<NodeProps, NodeState> {
         relations: rels
       })
     });
+    */
   }
 
   expandRelation(e: SyntheticEvent<any>) {

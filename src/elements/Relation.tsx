@@ -1,12 +1,11 @@
 import * as React from 'react';
 import {Component} from 'react';
 
-import {Node as GCNode, Tasks, Task, TaskContext, TaskResult} from 'greycat';
+import {Node as GCNode} from 'greycat';
 
 import * as SplitPane from 'react-split-pane';
 
 import 'bootstrap/dist/css/bootstrap.css';
-import AppState from "../AppState";
 import Node from "./Node";
 import SyntheticEvent = React.SyntheticEvent;
 
@@ -31,11 +30,14 @@ class Relation extends Component<RelationProps, RelationState> {
     }
   }
 
+  /*
   private static traverseMe: Task = Tasks.newTask()
     .travelInTime("{{time}}")
     .traverse("{{myName}}");
+    */
 
   componentDidMount() {
+    /*
     AppState.graph((graph => {
       let taskContext: TaskContext = Relation.traverseMe.prepare(graph, this.props.parent, ((result: TaskResult<Node>) => {
         if(result.exception()) {
@@ -51,6 +53,7 @@ class Relation extends Component<RelationProps, RelationState> {
       taskContext.setVariable("myName", this.props.relName);
       Relation.traverseMe.executeUsing(taskContext);
     }).bind(this));
+    */
   }
 
   expandNode(e: SyntheticEvent<any>) {
