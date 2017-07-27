@@ -1,26 +1,26 @@
 
 import * as React from 'react';
 import {Component, SyntheticEvent} from 'react';
-import ConnectionDetails from "../../core/ConnectionDetails";
+import Connection from "../../core/Connection";
 import {Button, Col, Form, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, Row} from "react-bootstrap";
 import CryptoJS = require("crypto-js");
 
 export interface ConnectionPanelProps {
-  connection?: ConnectionDetails,
-  onConnectionChanged?: (connection: ConnectionDetails)=>any,
+  connection?: Connection,
+  onConnectionChanged?: (connection: Connection)=>any,
   onClose?: ()=>any
 }
 
 class ConnectionPanel extends Component<ConnectionPanelProps, {show:boolean}> {
 
-  private _connection: ConnectionDetails;
+  private _connection: Connection;
 
   constructor(props: ConnectionPanelProps) {
     super(props);
     this.state = {
       show: true
     };
-    this._connection = this.props.connection || new ConnectionDetails();
+    this._connection = this.props.connection || new Connection();
   }
 
   private savePassword() {

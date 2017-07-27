@@ -1,17 +1,19 @@
 import * as React from 'react';
 import {Component} from 'react';
-import ConnectionDetails from "../core/ConnectionDetails";
+import Connection from "../core/Connection";
 import {Col, Panel, Row} from "react-bootstrap";
-import {Graph} from "greycat";
+import {Graph, Node as GCNode} from "greycat";
 import GCNodeTree from "./nav/GCNodeTree";
+import NodeDetailsPanel from './panels/NodeDetailsPanel';
 
 export interface GraphPanelProps {
-  connection: ConnectionDetails
+  connection: Connection
 }
 
 export interface GraphPanelState {
   connectionState: number,
   graph?: Graph
+  selectedNode?: GCNode
 }
 
 class GraphPanel extends Component<GraphPanelProps, GraphPanelState> {
@@ -48,9 +50,11 @@ class GraphPanel extends Component<GraphPanelProps, GraphPanelState> {
         <Panel header={<div><b>{this.props.connection.name}</b> {displayState}</div>}>
           <Row>
             <Col sm={6}>
-              {(this.state.connectionState === GraphPanel.CONNECTED?<GCNodeTree graph={this.state.graph} world={0} time={(new Date()).getTime()}/>:null)}
+              {(this.state.connectionState === GraphPanel.CONNECTED?<GCNodeTree graph={this.state.graph} world={0} time={(new Date()).getTime()} onNodeSelected={(n) => {this.setState({selectedNode: n})}}/>:null)}
             </Col>
-            <Col sm={6}></Col>
+            <Col sm={6}>
+              <NodeDetailsPanel node={this.state.selectedNode}/>
+            </Col>
           </Row>
         </Panel>
       </div>

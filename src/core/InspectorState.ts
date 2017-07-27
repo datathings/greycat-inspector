@@ -1,15 +1,17 @@
-import ConnectionDetails from './ConnectionDetails';
+import Connection from './Connection';
 import * as CryptoJS from "crypto-js";
 
 class InspectorState {
 
-  private _connections: ConnectionDetails[] = [];
+  private _storedConnections: Map<String, Connection>;
+  private _connections: Connection[] = [];
+  private _panelsListeners: (() => any)[] = [];
 
   get connections() {
     return this._connections;
   }
 
-  public addGraphPanel(newConnection: ConnectionDetails) {
+  public addGraphPanel(newConnection: Connection) {
     this._connections.push(newConnection);
     this._panelsListeners.forEach((lst: () => any) => {
       if (lst) {
@@ -17,8 +19,6 @@ class InspectorState {
       }
     });
   }
-
-  private _panelsListeners: (() => any)[] = [];
 
   public listenPanelAdded(cb: () => any): number {
     return this._panelsListeners.push(cb);
@@ -28,8 +28,6 @@ class InspectorState {
     delete this._panelsListeners[ref];
   }
 
-  private _storedConnections: Map<String, ConnectionDetails>;
-
   get storedConnections() {
     if (!this._storedConnections) {
       this._storedConnections = this.load();
@@ -37,7 +35,7 @@ class InspectorState {
     return this._storedConnections;
   }
 
-  public updateConnection(connection: ConnectionDetails) {
+  public updateConnection(connection: Connection) {
     this._storedConnections.set(connection.name, connection);
     this.save();
   }
@@ -49,7 +47,7 @@ class InspectorState {
   private save() {
 
     let connections = [];
-    this._storedConnections.forEach((value: ConnectionDetails) => {
+    this._storedConnections.forEach((value: Connection) => {
       connections.push(value);
     });
     let encripted: any = CryptoJS.AES.encrypt(JSON.stringify(connections), InspectorState.STORAGE_SECRET);
@@ -57,13 +55,13 @@ class InspectorState {
   }
 
   private load() {
-    let map = new Map<String, ConnectionDetails>();
+    let map = new Map<String, Connection>();
     let storedString = window.localStorage.getItem(InspectorState.STORAGE_KEY);
     if (storedString) {
       let decrypted: any = CryptoJS.AES.decrypt(storedString, InspectorState.STORAGE_SECRET);
       let content: any[] = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
       content.forEach((value: any) => {
-        let connection = new ConnectionDetails();
+        let connection = new Connection();
         for(let attribute in value) {
           connection[attribute] = value[attribute];
         }

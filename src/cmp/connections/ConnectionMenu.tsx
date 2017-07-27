@@ -2,14 +2,14 @@ import * as React from 'react';
 import {Component} from 'react';
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 import InspectorState from '../../core/InspectorState';
-import ConnectionDetails from '../../core/ConnectionDetails';
+import Connection from '../../core/Connection';
 import ConnectionPanel from "./ConnectionPanel";
 
 export interface ConnectionMenuProps {
   inspectorState: InspectorState;
 }
 
-class ConnectionMenu extends Component<ConnectionMenuProps, { showConnectionPanel: boolean, connectionSelected?: ConnectionDetails }> {
+class ConnectionMenu extends Component<ConnectionMenuProps, { showConnectionPanel: boolean, connectionSelected?: Connection }> {
 
   constructor(props: ConnectionMenuProps) {
     super(props);
@@ -25,7 +25,7 @@ class ConnectionMenu extends Component<ConnectionMenuProps, { showConnectionPane
     if (this.props.inspectorState.storedConnections.size === 0) {
       connectionSelector.push(<MenuItem key="none">No connection available.</MenuItem>);
     } else {
-      this.props.inspectorState.storedConnections.forEach((conn: ConnectionDetails, key: string) => {
+      this.props.inspectorState.storedConnections.forEach((conn: Connection, key: string) => {
         connectionSelector.push(<MenuItem key={key} eventKey={"conn#" + key} value={key}>{key}</MenuItem>);
       });
     }
@@ -57,7 +57,7 @@ class ConnectionMenu extends Component<ConnectionMenuProps, { showConnectionPane
     );
   }
 
-  private connectionEdited(connection: ConnectionDetails) {
+  private connectionEdited(connection: Connection) {
     if (connection.isToRemember) {
       this.props.inspectorState.updateConnection(connection);
     }

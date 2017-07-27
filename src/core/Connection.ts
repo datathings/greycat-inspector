@@ -2,7 +2,7 @@
 
 import {Graph, GraphBuilder} from "greycat";
 import {WSClient} from "greycat-websocket";
-class ConnectionDetails {
+class Connection {
 
   public name : string;
 
@@ -26,11 +26,11 @@ class ConnectionDetails {
       } else {
         let connectionLink = this.address;
         if(this.isAuthentication) {
-          ConnectionDetails.authenticate((this.isSSL?"https://":"http://")+connectionLink , this.login, this.password, (success: boolean, key: string)=>{
+          Connection.authenticate((this.isSSL?"https://":"http://")+connectionLink , this.login, this.password, (success: boolean, key: string)=>{
             this.connectGraph((this.isSSL?"wss://":"ws://") + connectionLink + "/ws?gc-auth-key=" + key.split("#")[0], cb);
           });
         } else {
-          this.connectGraph("ws" + connectionLink + "/ws", cb);
+          this.connectGraph((this.isSSL?"wss://":"ws://") + connectionLink + "/ws", cb);
         }
       }
   }
@@ -79,8 +79,5 @@ class ConnectionDetails {
     xhr.send(fd);
   }
 
-
-  public
-
 }
-export default ConnectionDetails;
+export default Connection;

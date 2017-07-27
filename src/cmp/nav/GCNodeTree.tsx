@@ -1,41 +1,28 @@
 import * as React from 'react';
 import {Component} from 'react';
 
-import {SyntheticEvent} from 'react';
-import {Graph, Type} from "greycat";
-
 import './tree.css';
-import GCNodeTreeItem from "./GCNodeTreeItem";
+import NavigationContext from './NavigationContext';
+import TreeItemIndex from './TreeItemIndex';
 
-export interface GCNodeTreeProps {
-  graph: Graph,
-  world: number,
-  time: number
-}
 
 export interface GCNodeTreeState {
   globalIndexes: string[]
 }
 
-class GCNodeTree extends Component<GCNodeTreeProps, GCNodeTreeState> {
+class GCNodeTree extends Component<NavigationContext, GCNodeTreeState> {
 
-  constructor(props: GCNodeTreeProps) {
+  constructor(props: NavigationContext) {
     super(props);
     this.state = {
       globalIndexes: []
     }
   }
 
-
   componentDidMount() {
     this.props.graph.indexNames(this.props.world, this.props.time, (globalIndexesNames: string[]) => {
       this.setState({globalIndexes: globalIndexesNames});
     });
-  }
-
-  expand(e: SyntheticEvent<any>) {
-    let indexName: string = (e.target as HTMLElement).textContent;
-    console.log(indexName, e);
   }
 
   render() {
@@ -44,7 +31,7 @@ class GCNodeTree extends Component<GCNodeTreeProps, GCNodeTreeState> {
       content = <span>No index found</span>;
     } else {
       content = this.state.globalIndexes.map((idxName: string, idx: number) => {
-        return <GCNodeTreeItem key={idxName} type={Type.INDEX} graph={this.props.graph} relationName={idxName}/>;
+        return <TreeItemIndex key={idxName} name={idxName} global={true} {...this.props}/>;
       });
     }
     return <ul className="tree-container">{content}</ul>;
