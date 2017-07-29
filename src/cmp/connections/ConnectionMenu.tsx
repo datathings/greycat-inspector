@@ -18,6 +18,15 @@ class ConnectionMenu extends Component<ConnectionMenuProps, { showConnectionPane
     }
   }
 
+  componentDidMount() {
+    let currentConnection = Connection.loadOngoingConnection();
+    if(currentConnection) {
+      this.setState({connectionSelected: currentConnection}, () => {
+        this.props.inspectorState.addGraphPanel(this.state.connectionSelected);
+      });
+    }
+  }
+
   render() {
 
     let connectionSelector: JSX.Element[] = [];
