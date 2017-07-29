@@ -1,6 +1,6 @@
 
 
-import {Node as GCNode} from 'greycat';
+import {Node as GCNode} from '@greycat/greycat';
 
 class GraphPanelState {
 

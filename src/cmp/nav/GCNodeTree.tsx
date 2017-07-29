@@ -31,7 +31,7 @@ class GCNodeTree extends Component<NavigationContext, GCNodeTreeState> {
       content = <span>No index found</span>;
     } else {
       content = this.state.globalIndexes.map((idxName: string, idx: number) => {
-        return <TreeItemIndex key={idxName} name={idxName} global={true} {...this.props}/>;
+        return <TreeItemIndex key={idxName} name={idxName} {...this.props}/>;
       });
     }
     return <ul className="tree-container">{content}</ul>;

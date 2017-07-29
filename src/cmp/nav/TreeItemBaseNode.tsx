@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
 
-import { Node as GCNode} from 'greycat';
+import { Node as GCNode} from '@greycat/greycat';
 import './tree.css';
 import NavigationContext from './NavigationContext';
 import TreeItemState from './TreeItemState';

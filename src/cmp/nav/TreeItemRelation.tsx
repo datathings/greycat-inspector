@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
 
-import { Node as GCNode, Type } from 'greycat';
+import { Node as GCNode, Type } from '@greycat/greycat';
 import './tree.css';
 import NavigationContext from './NavigationContext';
 import TreeItemState from './TreeItemState';
@@ -48,20 +48,40 @@ class TreeItemRelation extends Component<TreeItemRelationProps, TreeItemState> {
 
   render() {
     let content: JSX.Element[] = [];
-    this.state.children.forEach((e:ElementFromRelation, idx:number)=>{
-      let typeHash = e.node.graph().resolver().typeCode(e.node);
-      if(Type.isCustom(typeHash)) {
-        content.push(<TreeItemCustomNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...this.props}/>);
+    const {node, name, ...otherProps} = this.props;
+    if (this.state.expanded) {
+      if(!this.state.expandFully) {
+        for(let i = 0; i < this.props.visibilityLimit && i < this.state.children.length; i++) {
+          let child = this.state.children[i];
+          content.push(this.getRenderer(child, otherProps));
+        }
+        if(this.state.children.length > this.props.visibilityLimit) {
+          content.push(
+            <li key='more' className="tree-item" onClick={(e)=>{this.setState({expandFully:true});e.stopPropagation()}}>
+              <span>...more({this.state.children.length-this.props.visibilityLimit})</span>
+            </li>);
+        }
       } else {
-        content.push(<TreeItemBaseNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...this.props}/>);
+        this.state.children.forEach((child)=>{
+          content.push(this.getRenderer(child, otherProps));
+        });
       }
-    });
+    }
 
     return (
       <li className="tree-item" onClick={this.expand.bind(this)}>
-        <span><i className="fa fa-cube"/>&nbsp;{this.props.node.getWithDefault("name", this.props.node.id)}</span>
+        <span><i className="fa fa-cubes"/>&nbsp;{this.props.name}</span>
         {(content.length > 0 ? <ul className="tree-container">{content}</ul> : null)}
       </li>);
+  }
+
+  private getRenderer(e: ElementFromRelation, props: any): JSX.Element {
+    let typeHash = e.node.graph().resolver().typeCode(e.node);
+    if(Type.isCustom(typeHash)) {
+      return <TreeItemCustomNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...props}/>;
+    } else {
+      return <TreeItemBaseNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...props}/>;
+    }
   }
 }
 
