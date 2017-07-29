@@ -10,15 +10,14 @@ import ElementFromRelation from '../../core/ElementFromRelation';
 import TreeItemRelation from './TreeItemRelation';
 import TreeItemIndex from './TreeItemIndex';
 
-interface TreeItemCustomNodeProps extends NavigationContext {
-  node: GCNode
+interface TreeItemNodeProps extends NavigationContext {
+  node: GCNode;
+  nameInParent?: string;
 }
 
-class TreeItemCustomNode extends Component<TreeItemCustomNodeProps, TreeItemState> {
+class TreeItemNode extends Component<TreeItemNodeProps, TreeItemState> {
 
-
-
-  constructor(props: TreeItemCustomNodeProps) {
+  constructor(props: TreeItemNodeProps) {
     super(props);
     this.state = {
       children   : [],
@@ -35,29 +34,27 @@ class TreeItemCustomNode extends Component<TreeItemCustomNodeProps, TreeItemStat
       if(this.props.onNodeSelected) {
         this.props.onNodeSelected(this.props.node);
       }
-      console.error("Expand CustomNode");
-      let nState: plugin.NodeState = this.props.graph.resolver().resolveState(this.props.node);
-      let rels: ElementFromRelation[] = [];
+      if(this.props.nameInParent){
+        let typedAttribute = this.props.node.getEGraph(this.props.nameInParent);
+        console.log("TypedAttribute", typedAttribute);
+      } else {
+        let nState: plugin.NodeState = this.props.graph.resolver().resolveState(this.props.node);
+        let rels: ElementFromRelation[] = [];
 
-      nState.each((attributeKey: number, elemType: number, elem: any) => {
-        let retrieved: string = this.props.graph.resolver().hashToString(attributeKey);
-        if (!retrieved) {
-          retrieved = "" + attributeKey;
-        }
+        nState.each((attributeKey: number, elemType: number, elem: any) => {
+          let retrieved: string = this.props.graph.resolver().hashToString(attributeKey);
+          if (!retrieved) {
+            retrieved = "" + attributeKey;
+          }
+          if (elemType === Type.RELATION || elemType === Type.INDEX  || elemType === Type.ERELATION) {
+            rels.push({node: this.props.node, relationName: retrieved, childType: elemType});
+          } else if(Type.isCustom(elemType)) {
+            rels.push({node: elem, relationName: retrieved, childType: elemType});
+          }
 
-        if (elemType === Type.RELATION || elemType === Type.INDEX  || elemType === Type.ERELATION) {
-          console.log("Index", retrieved, "LocalIndex", elem);
-          rels.push({node: this.props.node, relationName: retrieved, childType: elemType});
-        } else if( elemType === Type.NDTREE || elemType === Type.KDTREE) {
-          console.log("N/K-DTREE", retrieved, "N/K-DTREE", elem);
-        } else if(Type.isCustom(elemType)) {
-          rels.push({node: elem, childType: elemType});
-        } else {
-          console.error("Type Ignored");
-        }
-
-      });
-      this.setState({children: rels, expanded: true});
+        });
+        this.setState({children: rels, expanded: true});
+      }
     }
   }
 
@@ -85,7 +82,7 @@ class TreeItemCustomNode extends Component<TreeItemCustomNodeProps, TreeItemStat
 
     return (
       <li className="tree-item" onClick={this.expand.bind(this)}>
-        <span><i className="fa fa-cube"/>&nbsp;{this.props.node.getWithDefault("name", this.props.node.id)}</span>
+        <span><i className="fa fa-cube"/>&nbsp;{this.props.node.getWithDefault("name", this.props.node.id())}</span>
         {(content.length > 0 ? <ul className="tree-container">{content}</ul> : null)}
       </li>);
   }
@@ -96,7 +93,7 @@ class TreeItemCustomNode extends Component<TreeItemCustomNodeProps, TreeItemStat
     } else if(e.childType === Type.INDEX) {
       return <TreeItemIndex key={e.node.id()+'_'+e.node.time() + '_' + e.relationName} parent={e.node} name={e.relationName} {...props}/>;
     } else if(Type.isCustom(e.childType)) {
-      //content.push(<TreeItemCustomNode key={e.node.id()+'_'+e.node.time()+'_'+e.relationName} node={e.node} {...this.props}/>);
+      return <TreeItemNode key={e.node.id()+'_'+e.node.time()+'_'+e.relationName} node={e.node} nameInParent={e.relationName} {...this.props}/>;
     } else {
       console.error("Unknown children type:" + e.childType, e);
     }
@@ -105,4 +102,4 @@ class TreeItemCustomNode extends Component<TreeItemCustomNodeProps, TreeItemStat
 
 }
 
-export default TreeItemCustomNode;
+export default TreeItemNode;

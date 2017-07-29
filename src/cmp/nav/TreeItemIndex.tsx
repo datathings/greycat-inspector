@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
 
-import { Node as GCNode, NodeIndex, Type } from '@greycat/greycat';
+import { Node as GCNode, NodeIndex } from '@greycat/greycat';
 
 import './tree.css';
 import NavigationContext from './NavigationContext';
 import TreeItemState from './TreeItemState';
 import ElementFromRelation from '../../core/ElementFromRelation';
-import TreeItemBaseNode from './TreeItemBaseNode';
-import TreeItemCustomNode from './TreeItemCustomNode';
+import TreeItemNode from './TreeItemNode';
 
 export interface TreeItemIndexProps extends NavigationContext {
   name: string;
@@ -75,8 +74,8 @@ class TreeItemIndex extends Component<TreeItemIndexProps, TreeItemState> {
     if (this.state.expanded) {
       if(!this.state.expandFully) {
         for(let i = 0; i < this.props.visibilityLimit && i < this.state.children.length; i++) {
-          let child = this.state.children[i];
-          content.push(this.getRenderer(child, otherProps));
+          let e = this.state.children[i];
+          content.push(<TreeItemNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...otherProps}/>);
         }
         if(this.state.children.length > this.props.visibilityLimit) {
           content.push(
@@ -85,8 +84,8 @@ class TreeItemIndex extends Component<TreeItemIndexProps, TreeItemState> {
             </li>);
         }
       } else {
-        this.state.children.forEach((child)=>{
-          content.push(this.getRenderer(child, otherProps));
+        this.state.children.forEach((e)=>{
+          content.push(<TreeItemNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...otherProps}/>);
         });
       }
     }
@@ -97,16 +96,6 @@ class TreeItemIndex extends Component<TreeItemIndexProps, TreeItemState> {
         {(content.length > 0 ? <ul className="tree-container">{content}</ul> : null)}
       </li>);
   }
-
-  private getRenderer(e: ElementFromRelation, props: any): JSX.Element {
-    let typeHash = e.node.graph().resolver().typeCode(e.node);
-    if(Type.isCustom(typeHash)) {
-      return <TreeItemCustomNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...props} />;
-    } else {
-      return <TreeItemBaseNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...props}/>;
-    }
-  }
-
 
 }
 
