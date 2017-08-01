@@ -5,7 +5,7 @@ import InspectorState from '../core/InspectorState';
 import ConnectionMenu from '../cmp/connections/ConnectionMenu';
 import Connection from "../core/Connection";
 import GraphPanel from "../cmp/GraphPanel";
-import {Col, Row} from "react-bootstrap";
+import { Grid, Row } from 'react-bootstrap';
 
 
 class MainPage extends Component<RouteComponentProps<{}>, { connections: Connection[], glConfig: any }> {
@@ -36,11 +36,14 @@ class MainPage extends Component<RouteComponentProps<{}>, { connections: Connect
     return (
       <div>
         <ConnectionMenu inspectorState={this.inspectorState}/>
-        <Row>
-          {this.state.connections.map((connection: Connection, idx: number) => {
-            return <Col key={connection.name+idx} sm={6}><GraphPanel connection={connection}/></Col>;
-          })}
-        </Row>
+        <Grid>
+          <Row>
+            {this.state.connections.map((connection: Connection, idx: number) => {
+              return <GraphPanel connection={connection}/>;
+            })}
+          </Row>
+        </Grid>
+
       </div>);
   }
 }
