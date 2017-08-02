@@ -93,7 +93,7 @@ class TreeItemNode extends Component<TreeItemNodeProps, TreeItemState> {
     } else if(e.childType === Type.INDEX) {
       return <TreeItemIndex key={e.node.id()+'_'+e.node.time() + '_' + e.relationName} parent={e.node} name={e.relationName} {...props}/>;
     } else if(Type.isCustom(e.childType)) {
-      return <TreeItemNode key={e.node.id()+'_'+e.node.time()+'_'+e.relationName} node={e.node} nameInParent={e.relationName} {...this.props}/>;
+      return <TreeItemNode key={this.props.node.id()+'_'+this.props.node.time()+'_'+e.relationName} node={e.node} nameInParent={e.relationName} {...this.props}/>;
     } else {
       console.error("Unknown children type:" + e.childType, e);
     }

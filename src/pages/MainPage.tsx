@@ -39,7 +39,7 @@ class MainPage extends Component<RouteComponentProps<{}>, { connections: Connect
         <Grid>
           <Row>
             {this.state.connections.map((connection: Connection, idx: number) => {
-              return <GraphPanel connection={connection}/>;
+              return <GraphPanel key={connection.name} connection={connection}/>;
             })}
           </Row>
         </Grid>
