@@ -30,11 +30,11 @@ class TreeItemIndex extends Component<TreeItemIndexProps, TreeItemState> {
     if (this.state.expanded) {
       this.setState({expanded: false, expandFully: false});
     } else {
-      if(!this.props.parent) {
+      if (!this.props.parent) {
         this.props.graph.index(this.props.world, this.props.time, this.props.name, (index: NodeIndex) => {
           index.findFrom((nodes: GCNode[]) => {
             this.setState({
-              children : nodes.map((n) => {
+              children    : nodes.map((n) => {
                 if (n) {
                   let elt = new ElementFromRelation();
                   elt.node = n;
@@ -50,19 +50,19 @@ class TreeItemIndex extends Component<TreeItemIndexProps, TreeItemState> {
       } else {
         let index = this.props.parent.getIndex(this.props.name);
         index.find((nodes: GCNode[]) => {
-            this.setState({
-              children : nodes.map((n) => {
-                if (n) {
-                  let elt = new ElementFromRelation();
-                  elt.node = n;
-                  elt.relationName = null;
-                  return elt;
-                } else {
-                  return null;
-                }
-              }), expanded: true
-            });
-          }, this.props.world, this.props.time);
+          this.setState({
+            children    : nodes.map((n) => {
+              if (n) {
+                let elt = new ElementFromRelation();
+                elt.node = n;
+                elt.relationName = null;
+                return elt;
+              } else {
+                return null;
+              }
+            }), expanded: true
+          });
+        }, this.props.world, this.props.time);
       }
     }
   }
@@ -72,20 +72,27 @@ class TreeItemIndex extends Component<TreeItemIndexProps, TreeItemState> {
     let content: JSX.Element[] = [];
 
     if (this.state.expanded) {
-      if(!this.state.expandFully) {
-        for(let i = 0; i < this.props.visibilityLimit && i < this.state.children.length; i++) {
+      if (!this.state.expandFully) {
+        for (let i = 0; i < this.props.visibilityLimit && i < this.state.children.length; i++) {
           let e = this.state.children[i];
-          content.push(<TreeItemNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...otherProps}/>);
+          content.push(<TreeItemNode key={e.node.id() + '_' + e.node.time()} node={e.node} {...otherProps}/>);
         }
-        if(this.state.children.length > this.props.visibilityLimit) {
+        if (this.state.children.length > this.props.visibilityLimit) {
           content.push(
-            <li className="tree-item" onClick={(e)=>{this.setState({expandFully:true});e.stopPropagation()}}>
-              <span>...more({this.state.children.length-this.props.visibilityLimit})</span>
+            <li className="tree-item" onClick={(e) => {
+              this.setState({expandFully: true});
+              e.stopPropagation()
+            }}>
+              <span>...more({this.state.children.length - this.props.visibilityLimit})</span>
             </li>);
         }
       } else {
-        this.state.children.forEach((e)=>{
-          content.push(<TreeItemNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...otherProps}/>);
+        this.state.children.forEach((e: ElementFromRelation, idx: number) => {
+          if (e) {
+            content.push(<TreeItemNode key={e.node.id() + '_' + e.node.time()} node={e.node} {...otherProps}/>);
+          } else {
+            content.push(<span key={'null' + idx}>null (idx:{idx})</span>);
+          }
         });
       }
     }

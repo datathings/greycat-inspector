@@ -9,6 +9,7 @@ import TreeItemState from './TreeItemState';
 import ElementFromRelation from '../../core/ElementFromRelation';
 import TreeItemRelation from './TreeItemRelation';
 import TreeItemIndex from './TreeItemIndex';
+import TreeItemEStruct from './TreeItemEStruct';
 
 interface TreeItemNodeProps extends NavigationContext {
   node: GCNode;
@@ -37,6 +38,12 @@ class TreeItemNode extends Component<TreeItemNodeProps, TreeItemState> {
       if(this.props.nameInParent){
         let typedAttribute = this.props.node.getEGraph(this.props.nameInParent);
         console.log("TypedAttribute", typedAttribute);
+        let rels: ElementFromRelation[] = [];
+        for(let i = 0; i < typedAttribute.size(); i++) {
+          let containedNode = typedAttribute.estruct(i);
+          rels.push({node: this.props.node, container: containedNode, relationName: '' + i, childType: Type.ESTRUCT});
+        }
+        this.setState({children: rels, expanded: true});
       } else {
         let nState: plugin.NodeState = this.props.graph.resolver().resolveState(this.props.node);
         let rels: ElementFromRelation[] = [];
@@ -79,10 +86,17 @@ class TreeItemNode extends Component<TreeItemNodeProps, TreeItemState> {
         });
       }
     }
+    let render: JSX.Element;
+    if(this.props.nameInParent) {
+      render = <span><i className="fa fa-object-group"/>&nbsp;{this.props.nameInParent}</span>
+
+    } else {
+      render = <span><i className="fa fa-cube"/>&nbsp;{this.props.node.getWithDefault("name", this.props.node.id())}</span>
+    }
 
     return (
       <li className="tree-item" onClick={this.expand.bind(this)}>
-        <span><i className="fa fa-cube"/>&nbsp;{this.props.node.getWithDefault("name", this.props.node.id())}</span>
+        {render}
         {(content.length > 0 ? <ul className="tree-container">{content}</ul> : null)}
       </li>);
   }
@@ -92,6 +106,8 @@ class TreeItemNode extends Component<TreeItemNodeProps, TreeItemState> {
       return <TreeItemRelation key={e.node.id()+'_'+e.node.time() + '_' + e.relationName} node={e.node} name={e.relationName} {...props}/>;
     } else if(e.childType === Type.INDEX) {
       return <TreeItemIndex key={e.node.id()+'_'+e.node.time() + '_' + e.relationName} parent={e.node} name={e.relationName} {...props}/>;
+    } else if(e.childType === Type.ESTRUCT) {
+      return <TreeItemEStruct key={e.node.id()+'_'+e.node.time() + '_' + e.relationName} node={e.container} indexInParent={e.relationName} {...props}/>;
     } else if(Type.isCustom(e.childType)) {
       return <TreeItemNode key={this.props.node.id()+'_'+this.props.node.time()+'_'+e.relationName} node={e.node} nameInParent={e.relationName} {...this.props}/>;
     } else {

@@ -29,17 +29,19 @@ class TreeItemRelation extends Component<TreeItemRelationProps, TreeItemState> {
     if (this.state.expanded) {
       this.setState({expanded: false, expandFully: false});
     } else {
-      this.props.node.traverse(this.props.name, (content:GCNode[])=>{
-        this.setState({children: content.map((n)=>{
-          if (n) {
-            let elt = new ElementFromRelation();
-            elt.node = n;
-            elt.relationName = null;
-            return elt;
-          } else {
-            return null;
-          }
-        }), expanded: true});
+      this.props.node.traverse(this.props.name, (content: GCNode[]) => {
+        this.setState({
+          children    : content.map((n) => {
+            if (n) {
+              let elt = new ElementFromRelation();
+              elt.node = n;
+              elt.relationName = null;
+              return elt;
+            } else {
+              return null;
+            }
+          }), expanded: true
+        });
       });
     }
   }
@@ -48,21 +50,24 @@ class TreeItemRelation extends Component<TreeItemRelationProps, TreeItemState> {
     let content: JSX.Element[] = [];
     const {node, name, ...otherProps} = this.props;
     if (this.state.expanded) {
-      if(!this.state.expandFully) {
-        for(let i = 0; i < this.props.visibilityLimit && i < this.state.children.length; i++) {
+      if (!this.state.expandFully) {
+        for (let i = 0; i < this.props.visibilityLimit && i < this.state.children.length; i++) {
           let e = this.state.children[i];
-          content.push(<TreeItemNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...otherProps}/>);
+          content.push(<TreeItemNode key={e.node.id() + '_' + e.node.time()} node={e.node} {...otherProps}/>);
           //content.push(this.getRenderer(child, otherProps));
         }
-        if(this.state.children.length > this.props.visibilityLimit) {
+        if (this.state.children.length > this.props.visibilityLimit) {
           content.push(
-            <li key='more' className="tree-item" onClick={(e)=>{this.setState({expandFully:true});e.stopPropagation()}}>
-              <span>...more({this.state.children.length-this.props.visibilityLimit})</span>
+            <li key='more' className="tree-item" onClick={(e) => {
+              this.setState({expandFully: true});
+              e.stopPropagation()
+            }}>
+              <span>...more({this.state.children.length - this.props.visibilityLimit})</span>
             </li>);
         }
       } else {
-        this.state.children.forEach((e)=>{
-          content.push(<TreeItemNode key={e.node.id()+'_'+e.node.time()} node={e.node} {...otherProps}/>);
+        this.state.children.forEach((e) => {
+          content.push(<TreeItemNode key={e.node.id() + '_' + e.node.time()} node={e.node} {...otherProps}/>);
 
           //content.push(this.getRenderer(child, otherProps));
         });
@@ -75,6 +80,7 @@ class TreeItemRelation extends Component<TreeItemRelationProps, TreeItemState> {
         {(content.length > 0 ? <ul className="tree-container">{content}</ul> : null)}
       </li>);
   }
+
   /*
   private getRenderer(e: ElementFromRelation, props: any): JSX.Element {
     let typeHash = e.node.graph().resolver().typeCode(e.node);
