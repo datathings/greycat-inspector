@@ -76,7 +76,7 @@ class TreeItemNode extends Component<TreeItemNodeProps, TreeItemState> {
         }
         if(this.state.children.length > this.props.visibilityLimit) {
           content.push(
-            <li className="tree-item" onClick={(e)=>{this.setState({expandFully:true});e.stopPropagation()}}>
+            <li key="more" className="tree-item" onClick={(e)=>{this.setState({expandFully:true});e.stopPropagation()}}>
               <span>...more({this.state.children.length-this.props.visibilityLimit})</span>
             </li>);
         }
