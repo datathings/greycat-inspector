@@ -90,8 +90,12 @@ class TreeItemNode extends Component<TreeItemNodeProps, TreeItemState> {
     if(this.props.nameInParent) {
       render = <span><i className="fa fa-object-group"/>&nbsp;{this.props.nameInParent}</span>
 
-    } else {
-      render = <span><i className="fa fa-cube"/>&nbsp;{this.props.node.getWithDefault("name", this.props.node.id())}</span>
+    } else {      
+      let itemName = this.props.node.getWithDefault("name", this.props.node.id());
+      if(typeof itemName !== 'string' ) {
+        itemName = this.props.node.id();
+      } 
+      render = <span><i className="fa fa-cube"/>&nbsp;{itemName}</span>
     }
 
     return (

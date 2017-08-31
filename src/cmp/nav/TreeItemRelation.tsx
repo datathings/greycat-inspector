@@ -24,24 +24,36 @@ class TreeItemRelation extends Component<TreeItemRelationProps, TreeItemState> {
     }
   }
 
+  private updateState(content: GCNode[]) {
+    this.setState({
+      children    : content.map((n) => {
+        if (n) {
+          let elt = new ElementFromRelation();
+          elt.node = n;
+          elt.relationName = null;
+          return elt;
+        } else {
+          return null;
+        }
+      }), expanded: true
+    });
+  }
+
   private expand(event: SyntheticEvent<any>) {
     event.stopPropagation();
     if (this.state.expanded) {
       this.setState({expanded: false, expandFully: false});
     } else {
       this.props.node.traverse(this.props.name, (content: GCNode[]) => {
-        this.setState({
-          children    : content.map((n) => {
-            if (n) {
-              let elt = new ElementFromRelation();
-              elt.node = n;
-              elt.relationName = null;
-              return elt;
-            } else {
-              return null;
-            }
-          }), expanded: true
-        });
+        if(content) {
+          this.updateState(content);
+        } else if(Number(this.props.name) !== NaN){
+          this.props.node.traverseAt(Number(this.props.name), (content: GCNode[]) => {
+            this.updateState(content);
+          });
+        } else {
+          // ?? handle error 
+        }
       });
     }
   }
