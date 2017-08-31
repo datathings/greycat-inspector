@@ -43,7 +43,7 @@ Now you can execute your server :)
 In $INPECTOR folder, **execute the following command**: `npm start`. Your default browser should open a blank web page on http://localhost:3000/` with two menu: "Connections" and "New". **Click on "New"**. Then fill the form:
 
 - "Name" is the name of your connection, put whatever you want. Here we will put "Example"
-- "Address" is the URL on which the inspector should connect **without the protocol** and the port that you defined in your server. As we are running everything locally, here it will be: `localhost:12345`
+- "Address" is the URL on which the inspector should connect **without the protocol** and the port that you defined in your server. As we are running everything locally, here it will be: `localhost:12345/ws`
 - "Remember" allows you to save your connection settings if you want to switch the inspector off.
 
 The other information are not required in this simple example, but I think they are easy to understand how to use them.
